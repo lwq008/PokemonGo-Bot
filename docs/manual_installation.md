@@ -25,7 +25,7 @@ brew install --devel protobuf
 brew install  autoconf libtool pkg-config wget git
 ```
 ####Mac + Linux installation
-make shure you installed everything above
+make sure you installed everything above
 
 - get pip for pyton2.7
 ```bash
@@ -69,8 +69,8 @@ cp configs/config.json.example configs/config.json
 vi configs/config.json
 ```
 ####
-- make shure your git repo is up to date
-(make shure you are in the bot folder and activated virtualenv)
+- make sure your git repo is up to date
+(make sure you are in the bot folder and activated virtualenv)
 ```bash
 git pull
 pip install -r requirements.txt
