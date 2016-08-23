@@ -24,8 +24,8 @@ class IncubateEggs(BaseTask):
         self.longer_eggs_first = self.config.get("longer_eggs_first", True)
         self.min_interval = self.config.get('min_interval', 120)
         
-        self.breakable_incubator = self.config.get("breakable", [])
-        self.infinite_incubator = self.config.get("infinite", [])
+        self.breakable_incubator = self.config.get("breakable", [2,5,10])
+        self.infinite_incubator = self.config.get("infinite", [2,5,10])
     
     def work(self):
         try:
@@ -61,15 +61,15 @@ class IncubateEggs(BaseTask):
                 if egg["used"] or egg["km"] == -1:
                     continue
                 
-                if self.breakable_incubator:
-                    if incubator.get('uses_remaining') is not None: # test if the incubator is of type breakable
-                        if egg["km"] not in self.breakable_incubator:
-                            continue
+                # test if the incubator is of type breakable
+                if incubator.get('uses_remaining') is not None:
+                    if egg["km"] not in self.breakable_incubator:
+                        continue
                     
-                if self.infinite_incubator:
-                    if incubator.get('uses_remaining') is None: # test if the incubator is of type infinite
-                        if egg["km"] not in self.infinite_incubator:
-                            continue
+                # test if the incubator is of type infinite
+                if incubator.get('uses_remaining') is None:
+                    if egg["km"] not in self.infinite_incubator:
+                        continue
                 
                 self.emit_event(
                     'incubate_try',

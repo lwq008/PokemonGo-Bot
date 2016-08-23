@@ -570,8 +570,16 @@ def init_config():
         type=float,
         default=8.0
     )
-
-
+    
+    add_config(
+         parser,
+         load,
+         long_flag="--enable_social",
+         help="Enable social event exchange between bot",
+         type=bool,
+         default=True
+    )
+    
     # Start to parse other attrs
     config = parser.parse_args()
     if not config.username and 'username' not in load:
@@ -632,8 +640,8 @@ def init_config():
         parser.error("--walk_min is out of range! (should be >= 1.0)")
         return None
 
-    if config.alt_min < 0:
-        parser.error("--alt_min is out of range! (should be >= 0.0)")
+    if config.alt_min < -413.0:
+        parser.error("--alt_min is out of range! (should be >= -413.0)")
         return None
 
     if not (config.location or config.location_cache):

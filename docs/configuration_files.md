@@ -21,11 +21,11 @@
     - [Valid names in templates](#valid-names-in-templates)
         - [Sample usages](#sample-usages)
     - [Sample configuration](#sample-configuration)
-- [CatchPokemon `catch_simulation` Settings](#catchpokemon-catch_simulation-settings)
+- [CatchPokemon Settings](#catchpokemon-settings)
     - [Default Settings](#default-settings)
     - [Settings Description](#settings-description)
     - [`flee_count` and `flee_duration`](#flee_count-and-flee_duration)
-    - [Previous Behaviour](#previous-behaviour)
+    - [Previous `catch_simulation` Behaviour](#previous-catch_simulation-behaviour)
 - [Sniping _(MoveToLocation)_](#sniping-_-movetolocation-_)
     - [Description](#description)
     - [Options](#options)
@@ -91,6 +91,7 @@ The behaviors of the bot are configured via the `tasks` key in the `config.json`
 ### Task Options:
 [[back to top](#table-of-contents)]
 * CatchPokemon
+  * `treat_unseen_as_vip`: Default `"true"` | Set to `"false"` to disable treating pokemons you don't have in your pokedex as VIPs.
 * EvolvePokemon
   * `evolve_all`: Default `NONE` | Set to `"all"` to evolve Pokémon if possible when the bot starts. Can also be set to individual Pokémon as well as multiple separated by a comma. e.g "Pidgey,Rattata,Weedle,Zubat"
   * `evolve_speed`: Default `20`
@@ -408,10 +409,10 @@ Key | Info
 }
 ```
 
-## CatchPokemon `catch_simulation` Settings
+## CatchPokemon Settings
 [[back to top](#table-of-contents)]
 
-These settings determine how the bot will simulate the app by adding pauses to throw the ball and navigate menus.  All times are in seconds.  To configure these settings add them to the config in the CatchPokemon task.
+These settings determine how the bot will catch pokemon. `catch_simulate` simulates the app by adding pauses to throw the ball and navigate menus.  All times in `catch_simulation` are in seconds.
 
 ### Default Settings
 [[back to top](#table-of-contents)]
@@ -419,15 +420,28 @@ These settings determine how the bot will simulate the app by adding pauses to t
 The default settings are 'safe' settings intended to simulate human and app behaviour.
 
 ```
+"catch_visible_pokemon": true,
+"catch_lured_pokemon": true,
+"min_ultraball_to_keep": 5,
+"berry_threshold": 0.35,
+"vip_berry_threshold": 0.9,
+"catch_throw_parameters": {
+  "excellent_rate": 0.1,
+  "great_rate": 0.5,
+  "nice_rate": 0.3,
+  "normal_rate": 0.1,
+  "spin_success_rate" : 0.6,
+  "hit_rate": 0.75
+},
 "catch_simulation": {
-    "flee_count": 3,
-    "flee_duration": 2,
-    "catch_wait_min": 2,
-    "catch_wait_max": 6,
-    "berry_wait_min": 2,
-    "berry_wait_max": 3,
-    "changeball_wait_min": 2,
-    "changeball_wait_max": 3
+  "flee_count": 3,
+  "flee_duration": 2,
+  "catch_wait_min": 2,
+  "catch_wait_max": 6,
+  "berry_wait_min": 2,
+  "berry_wait_max": 3,
+  "changeball_wait_min": 2,
+  "changeball_wait_max": 3
 }
 ```
 
@@ -436,6 +450,9 @@ The default settings are 'safe' settings intended to simulate human and app beha
 
 Setting | Description
 ---- | ----
+`min_ultraball_to_keep` | Allows the bot to use ultraballs on non-VIP pokemon as long as number of ultraballs is above this setting
+`berry_threshold` | The ideal catch rate threshold before using a razz berry on normal pokemon (higher threshold means using razz berries more frequently, for example if we raise `berry_threshold` to 0.5, any pokemon that has an initial catch rate between 0 to 0.5 will initiate a berry throw)
+`vip_berry_threshold` | The ideal catch rate threshold before using a razz berry on VIP pokemon
 `flee_count` | The maximum number of times catching animation will play before the pokemon breaks free
 `flee_duration` | The length of time for each animation
 `catch_wait_min`| The minimum amount of time to throw the ball
@@ -450,10 +467,10 @@ Setting | Description
 
 This part is app simulation and the default settings are advised.  When we hit a pokemon in the app the animation will play randomly 1, 2 or 3 times for roughly 2 seconds each time.  So we pause for a random number of animations up to `flee_count` of duration `flee_duration`
 
-### Previous Behaviour
+### Previous `catch_simulation` Behaviour
 [[back to top](#table-of-contents)]
 
-If you want to make your bot behave as it did prior to this update please use the following settings.
+If you want to make your bot behave as it did prior to the catch_simulation update please use the following settings.
 
 ```
 "catch_simulation": {
@@ -763,8 +780,8 @@ Simulates the random pause of the day (speaking to someone, getting into a store
 Configure how the bot should use the incubators.
 
 - `longer_eggs_first`: (True | False ) should the bot start by the longer eggs first. If set to true, the bot first use the 10km eggs, then the 5km eggs, then the 2km eggs.
-- `infinite`: ([2], [2,5], [2,5,10], []) the type of egg the infinite (ie. unbreakable) incubator(s) can incubate. If set to [2,5], the incubator(s) can only incubate the 2km and 5km eggs. If set to [], the incubator(s) can incubate any type of egg.
-- `breakable`: ([2], [2,5], [2,5,10], []) the type of egg the breakable incubator(s) can incubate. If set to [2,5], the incubator(s) can only incubate the 2km and 5km eggs. If set to [], the incubator(s) can incubate any type of egg.
+- `infinite`: ([2], [2,5], [2,5,10], []) the type of egg the infinite (ie. unbreakable) incubator(s) can incubate. If set to [2,5], the incubator(s) can only incubate the 2km and 5km eggs. If set to [], the incubator(s) will not incubate any type of egg.
+- `breakable`: ([2], [2,5], [2,5,10], []) the type of egg the breakable incubator(s) can incubate. If set to [2,5], the incubator(s) can only incubate the 2km and 5km eggs. If set to [], the incubator(s) will not incubate any type of egg.
 
 ###Example Config
 ```
